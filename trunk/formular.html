@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<title>formular.html</title>
+		<meta http-equiv="keywords" content="enter,your,keywords,here" />
+		<meta http-equiv="description" content="A short description of this page." />
+		<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+		<link rel="stylesheet" type="text/css" href="layout.css">
+		<link rel="stylesheet" type="text/css" href="form.css">
+		<!--[if lte IE 7]>  
+		<style type="text/css" media="all">  
+			@import "css/form-ie.css";  
+		</style>
+		<![endif]-->
+	</head>
+	<body>
+	<div id="page">
+		<div id="header">
+			<h1>
+				MovieLens MashUp
+			</h1>
+		</div> <!-- END #header -->
+		<div id="content">
+			<p>
+				Bitte dieses Formular vollständig ausfüllen.
+			</p>
+<form action="example.py">
+	<fieldset class="alt">
+					<legend>
+						<span>Login Details</span>
+					</legend>
+					<ol>
+						<li> 
+							<label for="nickname">Nickname:</label>
+							<input id="nickname" name="nickname" type="text" />
+					</li>
+						<li>
+							<label for="password">
+								Passwort:
+							</label>
+							<input type="password" class="password" name="password" id="password"/>
+						</li>
+						<li>
+							<label for="confirmPassword">
+								Passwort bestätigen:
+							</label>
+							<input type="password" class="password" name="confirmPassword" id="confirmPassword"/>
+						</li>
+					</ol>
+		</fieldset>
+		<fieldset>
+		<legend><span>Angaben</span></legend>
+		<ol> 
+		<li>
+		<label for="mlurl">Url von MovieLens:</label>
+		<input id="mlurl" name="mlurl" type="text" />
+		</li>
+		<li>
+		<label for="plz">Postleitzahl:</label>
+		<input id="plz" name="plz" type="text" />
+		</li>
+		</ol>
+	</fieldset>
+					<fieldset class="submit">
+					<input class="submit" type="submit" value="Anmelden" />
+				</fieldset>
+</form>
+		</div>
+		</div>
+		
+	</body>
+</html>

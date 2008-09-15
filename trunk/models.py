@@ -5,10 +5,14 @@ class Kino(db.Model):
     adress = db.PostalAddressProperty()
     coordinates = db.GeoPtProperty() 
 
+    def get_url(self): 
+        return '/kinos/%s/' % self.name.lower() 
+ 
+
 class Movie(db.Model):
     name = db.StringProperty()
     imdb = db.LinkProperty() 
- 
+
 
 class Feature(db.Model):
     movie = db.ReferenceProperty(reference_class=Movie)
@@ -19,4 +23,3 @@ class UserProfile(db.Model):
     user = db.UserProperty()
     movielens_url = db.LinkProperty()
     coordinates = db.GeoPtProperty() 
- 

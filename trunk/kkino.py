@@ -15,11 +15,20 @@ class MainPage(webapp.RequestHandler):
 
 class CinemaList(webapp.RequestHandler):
     def get(self):
-        cinemas = db.GqlQuery("SELECT * FROM Theater ORDER BY name ASC") 
+        cinemas = db.GqlQuery("SELECT * FROM Kino ORDER BY name ASC").fetch(20) 
+        for c in cinemas: 
+           c.url = c.get_url()
+
         self.response.out.write(template.render(tmpl('templates/cinemas.html'), 
-                               {'kinos':cinemas} 
+                               {'kinos':cinemas } 
                                 )) 
-       
+class OneCinema(webapp.RequestHandler):
+    def get(self, name):
+        cinema = Kino.all().filter('name =', name ) 
+        self.response.out.write(template.render(tmpl('templates/cinema.html'), 
+                               {'kino': cinema, 'name': name} 
+                                )) 
+ 
 
 class CinemaList2(webapp.RequestHandler):
     def get(self):
@@ -95,7 +104,18 @@ class MoviesUpcoming(webapp.RequestHandler):
 
 class UserProfile(webapp.RequestHandler): 
     def get(self): 
-        pass
+        user = users.get_current_user()
+        if user:
+            users.create_logout_url(self.request.path)
+            # TODO: display profile form
+        else:
+            users.create_login_url(self.request.path)
+            # TODO: display read-only profile
+
+
+class LoadFixture(webapp.RequestHandler): 
+    def get(self): 
+        import testdata
         
 
 class GetIMDBName(webapp.RequestHandler): 
@@ -110,6 +130,7 @@ application = webapp.WSGIApplication(
                                      [
                                         ('/', MainPage),
                                         ('/kinos/', CinemaList),
+                                        ('/kinos/(.*)/', OneCinema),
                                         ('/kinos/add/', AddCinema),
                                         ('/movies/add/', AddMovie),
                                         ('/today/', MoviesToday),
@@ -117,6 +138,7 @@ application = webapp.WSGIApplication(
                                         ('/profile/', UserProfile ), 
                                   #      ('/movie/(.*)', Movielisting ),
                                         ('/movies/get_original_name/', GetIMDBName),
+                                        ('/testdata/', LoadFixture),
                                      ],
                                      debug=True)
 

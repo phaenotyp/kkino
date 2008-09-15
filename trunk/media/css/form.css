@@ -62,3 +62,9 @@ fieldset.submit
 	padding-left: 12em;
 	background-color: #FFFFFF;
 }
+
+#map { 
+   width: 360px;
+   height: 200px;
+   border: 1px solid black;
+}

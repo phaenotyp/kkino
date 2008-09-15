@@ -1,4 +1,5 @@
 from google.appengine.api.urlfetch import fetch 
+import os
 
 altname_url = 'http://www.imdb.com/alternatename/?q=%s'
 aka_search_url = u'http://www.imdb.com/find?q=%s;s=tt;site=aka'
@@ -13,7 +14,6 @@ def get_imdb_name(aka):
         # TODO: get the h1, extract the orignal title and return it
     return 'Clockwork Orange'
 
-
 def get_user_movies(user): 
     #from google.appengine.api import users
     resp = fetch(user.movielens_url)
@@ -21,5 +21,4 @@ def get_user_movies(user):
         pass
         # TODO: parse via feedparser 
          
-    
-    
+def tmpl(name): return os.path.join(os.path.dirname(__file__), name)

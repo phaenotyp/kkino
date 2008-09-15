@@ -1,11 +1,24 @@
-<html>
-<head>
-<title>KoelnKino</title>
-</head>
-<body>
-  <h1>KoelnKino</h1>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+        <head>
+                <title>{% block title %}kkino{% endblock title %}</title>
+                <meta http-equiv="keywords" content="enter,your,keywords,here" />
+                <meta http-equiv="description" content="A short description of this page." />
+                <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+                <link rel="stylesheet" type="text/css" href="/media/css/layout.css">
+                <link rel="stylesheet" type="text/css" href="/media/css/form.css">
+                <!--[if lte IE 7]>  
+                <style type="text/css" media="all">  
+                        @import "css/form-ie.css";  
+                </style>
+                <![endif]-->
+        </head>
+        <body>
+        <div id="page">
   {% block content %}    
 
   {% endblock content %}
+        </div>
 </body>
 </html>

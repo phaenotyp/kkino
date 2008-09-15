@@ -35,7 +35,7 @@ body
 {
 	height: 100%;
 	background-color: #333333;
-	background-image: url(images/bg.gif);
+	background-image: url(/media/images/bg.gif);
 	background-position: 50% 0;
 	color: #000000;
 	line-height: 1.5;
@@ -72,7 +72,7 @@ a:hover
 	margin: 0 auto;
 	padding: 0 18px 0 18px;
 	text-align: left;
-	background: url(images/page.gif) repeat-y;
+	background: url(/media/images/page.gif) repeat-y;
 }
 
 * html #page
@@ -88,7 +88,7 @@ a:hover
 #header
 {
 	height: 90px;
-	background: #EF0E41  url(images/header.gif) repeat-x;
+	background: #EF0E41  url(/media/images/header.gif) repeat-x;
   color: #fff;	
 
 }

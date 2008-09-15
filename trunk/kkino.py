@@ -2,69 +2,20 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
-import datetime, os, cgi
-from models import Movie, Feature, Kino
+import datetime, cgi
+from models import Movie, Feature, Kino, UserProfile
 from google.appengine.ext import db
 import util
 
-def tmpl(name): return os.path.join(os.path.dirname(__file__), name) 
+from controllers import users, kinos
+
+def tmpl(name): util.tmpl(name) 
 
 class MainPage(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write('KoelnKino')
-
-class CinemaList(webapp.RequestHandler):
-    def get(self):
-        cinemas = db.GqlQuery("SELECT * FROM Kino ORDER BY name ASC").fetch(20) 
-        for c in cinemas: 
-           c.url = c.get_url()
-
-        self.response.out.write(template.render(tmpl('templates/cinemas.html'), 
-                               {'kinos':cinemas } 
-                                )) 
-class OneCinema(webapp.RequestHandler):
-    def get(self, name):
-        cinema = Kino.all().filter('name =', name ) 
-        self.response.out.write(template.render(tmpl('templates/cinema.html'), 
-                               {'kino': cinema, 'name': name} 
-                                )) 
- 
-
-class CinemaList2(webapp.RequestHandler):
-    def get(self):
-        cinemas = db.GqlQuery("SELECT * FROM Theater ORDER BY name ASC") 
-        out = []
-        a = out.append
-        a('<html>')  
-        a('<body>') 
-        a('<ul>') 
-        for c in cinemas:
-           a('<li>%s</li>' % c.name)  
-        a('</ul>') 
-        a('</body>') 
-        a('</html>')  
-        self.response.out.write("\n".join(out)) 
- 
-
-class AddCinema(webapp.RequestHandler):
-    def get(self): 
-        self.response.out.write("""
-      <html>
-        <body>
-          <form method="post">
-            <div><input type="text" name="name" /></div>
-            <div><input type="submit" value="Sign Guestbook" /></div>
-          </form>
-        </body>
-      </html>""")
-    
-    def post(self):      
-        t = Kino()
-        t.name = cgi.escape(self.request.get('name'))
-        t.put()
-        self.redirect('/kinos/') 
-        
+       
    
 class AddMovie(webapp.RequestHandler):
      def get(self): 
@@ -103,19 +54,6 @@ class MoviesUpcoming(webapp.RequestHandler):
 
         self.response.out.write('KoelnKino')
 
-class UserProfile(webapp.RequestHandler): 
-     
-    def get(self): 
-        user = users.get_current_user()
-        if user:
-            users.create_logout_url(self.request.path)
-            self.response.out.write(template.render(tmpl('templates/edit_profile.html'), {'user': user}))
-            # TODO: display profile form
-        else:
-            users.create_login_url(self.request.path)
-            self.response.out.write('<a href="%s">Login</a>' % users.create_login_url(self.request.uri))
-            # TODO: display read-only profile
-
 
 class LoadFixture(webapp.RequestHandler): 
     def get(self): 
@@ -133,13 +71,13 @@ class GetIMDBName(webapp.RequestHandler):
 application = webapp.WSGIApplication(
    [
     ('/', MainPage),
-    ('/kinos/', CinemaList),
-    ('/kinos/(.*)/', OneCinema),
-    ('/kinos/add/', AddCinema),
+    ('/kinos/', kinos.KinoList),
+    ('/kinos/(.*)/', kinos.KinoDetail),
+    ('/kinos/add/', kinos.KinoAdd),
     ('/movies/add/', AddMovie),
     ('/today/', MoviesToday),
     ('/upcoming/', MoviesUpcoming), 
-    ('/profile/', UserProfile ), 
+    ('/profile/', users.UserProfileController ), 
     # ('/movie/(.*)', Movielisting ),
     ('/movies/get_original_name/', GetIMDBName),
     ('/testdata/', LoadFixture),

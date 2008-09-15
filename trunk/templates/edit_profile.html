@@ -1,0 +1,29 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+  <p>
+  Bitte dieses Formular vollständig ausfüllen.
+  </p>
+<form action="example.py">
+  <fieldset class="alt">
+                <fieldset>
+                <legend><span>Angaben</span></legend>
+                <ol>
+                <li>
+                <label for="mlurl">Url von MovieLens:</label>
+                <input id="mlurl" name="mlurl" type="text" />
+                </li>
+                <li>
+                <label for="plz">Postleitzahl:</label>
+                <input id="plz" name="plz" type="text" />
+                </li>
+                </ol>
+        </fieldset>
+                                        <fieldset class="submit">
+                                        <input class="submit" type="submit" value="Anmelden" />
+                                </fieldset>
+</form>
+                </div>
+                        
+
+{% endblock content %} 

@@ -1,5 +1,6 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.api import users
 from google.appengine.ext.webapp import template
 import datetime, os, cgi
 from models import Movie, Feature, Kino
@@ -103,13 +104,16 @@ class MoviesUpcoming(webapp.RequestHandler):
         self.response.out.write('KoelnKino')
 
 class UserProfile(webapp.RequestHandler): 
+     
     def get(self): 
         user = users.get_current_user()
         if user:
             users.create_logout_url(self.request.path)
+            self.response.out.write(template.render(tmpl('templates/edit_profile.html'), {'user': user}))
             # TODO: display profile form
         else:
             users.create_login_url(self.request.path)
+            self.response.out.write('<a href="%s">Login</a>' % users.create_login_url(self.request.uri))
             # TODO: display read-only profile
 
 
@@ -127,25 +131,22 @@ class GetIMDBName(webapp.RequestHandler):
             self.response.out.write('Pass Name as param q.')
 
 application = webapp.WSGIApplication(
-                                     [
-                                        ('/', MainPage),
-                                        ('/kinos/', CinemaList),
-                                        ('/kinos/(.*)/', OneCinema),
-                                        ('/kinos/add/', AddCinema),
-                                        ('/movies/add/', AddMovie),
-                                        ('/today/', MoviesToday),
-                                        ('/upcoming/', MoviesUpcoming), 
-                                        ('/profile/', UserProfile ), 
-                                  #      ('/movie/(.*)', Movielisting ),
-                                        ('/movies/get_original_name/', GetIMDBName),
-                                        ('/testdata/', LoadFixture),
-                                     ],
-                                     debug=True)
+   [
+    ('/', MainPage),
+    ('/kinos/', CinemaList),
+    ('/kinos/(.*)/', OneCinema),
+    ('/kinos/add/', AddCinema),
+    ('/movies/add/', AddMovie),
+    ('/today/', MoviesToday),
+    ('/upcoming/', MoviesUpcoming), 
+    ('/profile/', UserProfile ), 
+    # ('/movie/(.*)', Movielisting ),
+    ('/movies/get_original_name/', GetIMDBName),
+    ('/testdata/', LoadFixture),
+   ], debug=True)
 
 def main():
-  run_wsgi_app(application)
+   run_wsgi_app(application)
 
 if __name__ == "__main__":
   main()
-
-

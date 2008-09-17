@@ -16,7 +16,7 @@
 				<li>
 					<label for="q">Mein Ort</label>
 					<input id="q" name="q" type="text" value="" />
-					<a href="#" onclick="showLocation(); return false;"> Ort suchen</a>
+					<a href="#" onclick="MlMup.showLocation(); return false;"> Ort suchen</a>
 				</li>
 				<li>
 					<input type="hidden" name="lat" value="" id="lat" />
@@ -25,6 +25,7 @@
                 <li>
                 <div id="map"></div>
                 </li>
+
                 </ol>
         </fieldset>
                                         <fieldset class="submit">
@@ -50,36 +51,56 @@
     <script type="text/javascript">
 
     //<![CDATA[
-	window.onload = function load(){
-    var map;
-    var geocoder;
-
 	
-	initialize();
-}
-
-    function initialize() {
-        if (GBrowserIsCompatible()) {
-        
-          // Create and Center a Map
-          map = new GMap2(document.getElementById("map"));
-          map.setCenter(new GLatLng(37.4419, -122.1419), 13);
-          map.addControl(new GLargeMapControl());
-          map.addControl(new GMapTypeControl());
-		  
-		  geocoder = new GClientGeocoder();
-
-
-          
-	 }
-    }
-
-    // addAddressToMap() is called when the geocoder returns an
-    // answer.  It adds a marker to the map with an open info window
-    // showing the nicely formatted version of the address and the country code.
-    function addAddressToMap(response) {
+	var MlMup = {
 		
-      map.clearOverlays();
+		 mapsLoaded: function() {
+  		
+		MlMup.map = new google.maps.Map2(document.getElementById("map"));
+  		MlMup.map.setCenter(new google.maps.LatLng(37.4419, -122.1419), 13);
+  		MlMup.map.addControl(new GLargeMapControl());
+  		MlMup.map.addControl(new GMapTypeControl());
+ 		if (google.loader.ClientLocation){
+ 			MlMup.map.setCenter(
+                new google.maps.LatLng(
+                    google.loader.ClientLocation.latitude,
+                    google.loader.ClientLocation.longitude
+                ), 13
+            );
+
+
+ 		MlMup.map.addOverlay(new GMarker(new google.maps.LatLng(
+                    google.loader.ClientLocation.latitude,
+                    google.loader.ClientLocation.longitude)),
+					{draggable: true}
+					);
+					
+		document.getElementById('long').value = google.loader.ClientLocation.longitude ;
+    	document.getElementById('lat').value =  google.loader.ClientLocation.latitude;				
+					
+ }
+
+},
+    showLocation: function () {
+	  var geocoder = new GClientGeocoder();
+	
+      var address = document.forms[0].q.value;
+      geocoder.getLocations(address, MlMup.addAddressToMap);
+    },
+
+		findLocation: function(address){
+			document.forms[0].q.value = address;
+      		MlMup.showLocation();
+			
+		},
+
+		loadMaps: function () {
+			
+  		google.load("maps", "2", {"callback" : MlMup.mapsLoaded});
+},
+    addAddressToMap: function (response) {
+		
+      MlMup.map.clearOverlays();
       if (!response || response.Status.code != 200) {
         alert("Sorry, we were unable to geocode that address");
       } else {
@@ -88,26 +109,25 @@
                             place.Point.coordinates[0]);
 		
         marker = new GMarker(point);
-        map.addOverlay(marker);
+        MlMup.map.addOverlay(marker);
 		marker.openInfoWindowHtml(place.address + '<br>');
         document.getElementById('long').value = place.Point.coordinates[1] ;
         document.getElementById('lat').value = place.Point.coordinates[0];
       }
     }
+		
+	};
+	
 
-    // showLocation() is called when you click on the Search button
-    // in the form.  It geocodes the address entered into the form
-    // and adds a marker to the map at that location.
-    function showLocation() {
-      var address = document.forms[0].q.value;
-      geocoder.getLocations(address, addAddressToMap);
-    }
 
-   // findLocation() is used to enter the sample addresses into the form.
-    function findLocation(address) {
-      document.forms[0].q.value = address;
-      showLocation();
-    }
+
+
+
+
+
+
+      google.setOnLoadCallback(MlMup.loadMaps);
+
 
     //]]>
 	

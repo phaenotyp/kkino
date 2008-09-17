@@ -1,22 +1,17 @@
 from google.appengine.ext import webapp
+from google.appengine.api import users
+from google.appengine.ext.webapp import template
+from util import tmpl
 
 class AddMovie(webapp.RequestHandler):
-     def get(self):
-        self.response.out.write("""
-      <html>
-        <body>
-          <form method="post">
-            <div><input type="text" name="name" /></div>
-            <div><input type="submit" value="Sign Guestbook" /></div>
-          </form>
-        </body>
-      </html>""")
+    def get(self):
+        self.response.out.write(template.render(tmpl('templates/addmovie.html'), {'user': user, 'api_key': GOOGLE_MAPS_KEY}))
 
-     def post(self):
-         t = Movie()
-         t.name = cgi.escape(self.request.get('name'))
-         t.put()
-         self.redirect('/kinos/')
+    def post(self):
+        t = Movie()
+        t.name = cgi.escape(self.request.get('name'))
+        t.put()
+        self.redirect('/kinos/')
 
 
 class MoviesToday(webapp.RequestHandler):

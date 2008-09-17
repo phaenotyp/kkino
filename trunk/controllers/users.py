@@ -25,7 +25,7 @@ class UserProfileController(webapp.RequestHandler):
         # get the profile of the logged in user or create a new one
         # there should be a method like get_or_create() but i cant find it 
         # in the docs
-        profile = UserProfile.gql("WHERE user = :1",  users.get_current_user()).get()
+        profile = UserProfile.gql("WHERE user = :1",  user).get()
         if not profile: 
             profile = UserProfile(user=user)
       

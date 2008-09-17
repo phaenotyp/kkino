@@ -7,12 +7,10 @@ class Kino(db.Model):
 
     def get_url(self): 
         return '/kinos/%s/' % self.name.lower() 
- 
 
 class Movie(db.Model):
     name = db.StringProperty()
     imdb = db.LinkProperty() 
-
 
 class Feature(db.Model):
     movie = db.ReferenceProperty(reference_class=Movie, collection_name="features")

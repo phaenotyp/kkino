@@ -5,9 +5,11 @@ from util import tmpl
 
 class AddMovie(webapp.RequestHandler):
     def get(self):
+        """Displays a form to add a new movie to the datastore""" 
         self.response.out.write(template.render(tmpl('templates/addmovie.html'), {'user': user, 'api_key': GOOGLE_MAPS_KEY}))
 
     def post(self):
+        """Recieves the form for a new movie and puts it into the datastore"""
         t = Movie()
         t.name = cgi.escape(self.request.get('name'))
         t.put()

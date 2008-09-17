@@ -15,8 +15,8 @@ class Movie(db.Model):
 
 
 class Feature(db.Model):
-    movie = db.ReferenceProperty(reference_class=Movie)
-    kino = db.ReferenceProperty(reference_class=Kino)
+    movie = db.ReferenceProperty(reference_class=Movie, collection_name="features")
+    kino = db.ReferenceProperty(reference_class=Kino, collection_name="features")
     datetime = db.DateTimeProperty() 
 
 class UserProfile(db.Model):

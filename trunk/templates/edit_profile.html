@@ -13,6 +13,15 @@
                 <label for="mlurl">Url von MovieLens:</label>
                 <input id="mlurl" name="mlurl" type="text" value="" />
                 </li>
+				<li>
+					<label for="q">Mein Ort</label>
+					<input id="q" name="q" type="text" value="" />
+					<a href="#" onclick="showLocation(); return false;"> Ort suchen</a>
+				</li>
+				<li>
+					<input type="hidden" name="lat" value="" id="lat" />
+					<input type="hidden" name="long" value="" id="long" />
+				</li>		
                 <li>
                 <div id="map"></div>
                 </li>
@@ -29,154 +38,79 @@
 
 
 {% block javascript %} 
-<script src="http://www.google.com/jsapi?key={{ api_key }}" type="text/javascript">
-</script>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key={{ api_key }}"  type="text/javascript"></script>
+
+<script type="text/javascript" charset="UTF-8" src="http://maps.google.com/intl/en_ALL/mapfiles/127d/maps2.api/mod_control.js"></script>
+<script src="http://www.google.com/uds/api?file=uds.js&v=1.0" type="text/javascript"></script>
+<script src="http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js" type="text/javascript"></script> 
+
+
 
 
     <script type="text/javascript">
 
     //<![CDATA[
-google.load('maps', '2'); // Load version 2 of the Maps API
+	window.onload = function load(){
+    var map;
+    var geocoder;
 
-
-function timezoneLoaded(obj) {
-    var timezone = obj.timezoneId;
-    if (!timezone) {
-        return;
-    }
-    document.getElementById('timezone').innerHTML = timezone;
-    document.getElementById('timezonep').style.display = 'block';
-    // Find out what time it is there
-    var s = document.createElement('script');
-    s.src = "http://json-time.appspot.com/time.json?callback=timeLoaded&tz=" + timezone;
-    s.type = 'text/javascript';
-    document.getElementsByTagName('head')[0].appendChild(s);
+	
+	initialize();
 }
 
-function timeLoaded(obj) {
-    if (obj.datetime) {
-        document.getElementById('datetime').innerHTML = obj.datetime;
-        document.getElementById('datetimep').style.display = 'block';        
-    }
-}
-
-function showMap() {
-    window.gmap = new google.maps.Map2(document.getElementById('map'));
-    gmap.addControl(new google.maps.LargeMapControl());
-    gmap.addControl(new google.maps.MapTypeControl());
-    gmap.enableContinuousZoom();
-    gmap.enableScrollWheelZoom();
-    
-    var timer = null;
-    
-    google.maps.Event.addListener(gmap, "move", function() {
-        var center = gmap.getCenter();
-        document.getElementById("latlon").innerHTML = center.toString();
+    function initialize() {
+        if (GBrowserIsCompatible()) {
         
-        // Wait a second, then figure out the timezone
-        if (timer) {
-            clearTimeout(timer);
-            timer = null;
-        }
-        timer = setTimeout(function() {
-            document.getElementById('timezonep').style.display = 'none';
-            document.getElementById('datetimep').style.display = 'none';
-            // Look up the timezone using geonames
-            var s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.src = "http://ws.geonames.org/timezoneJSON?lat=" + center.lat() +
-                "&lng=" + center.lng() + "&callback=timezoneLoaded";
-            document.getElementsByTagName("head")[0].appendChild(s);
-        }, 1500);
-        
-    });
-    google.maps.Event.addListener(gmap, "zoomend", function(oldZoom, newZoom) {
-        document.getElementById("zoom").innerHTML = newZoom;
-    });
-    google.maps.Event.addDomListener(document.getElementById('crosshair'),
-        'dblclick', function() {
-            gmap.zoomIn();
-        }
-    );
-    
-    // Default view of the world
-    gmap.setCenter(
-        new google.maps.LatLng(43.834526782236814, -37.265625), 3
-    );
-    
-    /* If we have a best-guess for the user's location based on their IP, 
-       show a "zoom to my location" link */
-    if (google.loader.ClientLocation) {
-        var link = document.createElement('a');
-        link.onclick = function() {
-            gmap.setCenter(
-                new google.maps.LatLng(
-                    google.loader.ClientLocation.latitude,
-                    google.loader.ClientLocation.longitude
-                ), 8
-            );
-            return false;
-        }
-        link.href = '#'
-        link.appendChild(
-            document.createTextNode('Zoom to my location (by IP)')
-        );
-        var form = document.getElementById('dataForm');
-        var p = form.getElementsByTagName('p')[0];
-        p.appendChild(link);
-    }
-    
-    // Set up Geocoder
-    window.geocoder = new google.maps.ClientGeocoder();
-    
-    // If query string was provided, geocode it
-    var bits = window.location.href.split('?');
-    if (bits[1]) {
-        var location = decodeURI(bits[1]);
-        document.getElementById('geocodeInput').value = location;
-        geocode(location);
-    }
-    
-    // Set up the form
-    var geocodeForm = document.getElementById('geocodeForm');
-    geocodeForm.onsubmit = function() {
-        geocode(document.getElementById('geocodeInput').value);
-        return false;
-    }
-}
+          // Create and Center a Map
+          map = new GMap2(document.getElementById("map"));
+          map.setCenter(new GLatLng(37.4419, -122.1419), 13);
+          map.addControl(new GLargeMapControl());
+          map.addControl(new GMapTypeControl());
+		  
+		  geocoder = new GClientGeocoder();
 
-var accuracyToZoomLevel = [
-    1,  // 0 - Unknown location
-    5,  // 1 - Country
-    6,  // 2 - Region (state, province, prefecture, etc.)
-    8,  // 3 - Sub-region (county, municipality, etc.)
-    11, // 4 - Town (city, village)
-    13, // 5 - Post code (zip code)
-    15, // 6 - Street
-    16, // 7 - Intersection
-    17 // 8 - Address
-];
 
-function geocodeComplete(result) {
-    if (result.Status.code != 200) {
-        alert('Could not geocode "' + result.name + '"');
-        return;
+          
+	 }
     }
-    var placemark = result.Placemark[0]; // Only use first result
-    var accuracy = placemark.AddressDetails.Accuracy;
-    var zoomLevel = accuracyToZoomLevel[accuracy] || 1;
-    var lon = placemark.Point.coordinates[0];
-    var lat = placemark.Point.coordinates[1];
-    gmap.setCenter(new google.maps.LatLng(lat, lon), zoomLevel);
-}
 
-function geocode(location) {
-    geocoder.getLocations(location, geocodeComplete);
-}
+    // addAddressToMap() is called when the geocoder returns an
+    // answer.  It adds a marker to the map with an open info window
+    // showing the nicely formatted version of the address and the country code.
+    function addAddressToMap(response) {
+		
+      map.clearOverlays();
+      if (!response || response.Status.code != 200) {
+        alert("Sorry, we were unable to geocode that address");
+      } else {
+        place = response.Placemark[0];
+        point = new GLatLng(place.Point.coordinates[1],
+                            place.Point.coordinates[0]);
+		
+        marker = new GMarker(point);
+        map.addOverlay(marker);
+		marker.openInfoWindowHtml(place.address + '<br>');
+        document.getElementById('long').value = place.Point.coordinates[1] ;
+        document.getElementById('lat').value = place.Point.coordinates[0];
+      }
+    }
 
-google.setOnLoadCallback(showMap);
+    // showLocation() is called when you click on the Search button
+    // in the form.  It geocodes the address entered into the form
+    // and adds a marker to the map at that location.
+    function showLocation() {
+      var address = document.forms[0].q.value;
+      geocoder.getLocations(address, addAddressToMap);
+    }
+
+   // findLocation() is used to enter the sample addresses into the form.
+    function findLocation(address) {
+      document.forms[0].q.value = address;
+      showLocation();
+    }
 
     //]]>
+	
     </script>
 
 {% endblock javascript %}

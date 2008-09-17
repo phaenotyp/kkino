@@ -1,3 +1,4 @@
+
 fieldset
 {
 	position: relative;
@@ -64,7 +65,7 @@ fieldset.submit
 }
 
 #map { 
-   width: 360px;
-   height: 200px;
+   width: 450px;
+   height: 250px;
    border: 1px solid black;
 }

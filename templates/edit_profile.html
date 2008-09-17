@@ -76,7 +76,18 @@
 					);
 					
 		document.getElementById('long').value = google.loader.ClientLocation.longitude ;
-    	document.getElementById('lat').value =  google.loader.ClientLocation.latitude;				
+    	document.getElementById('lat').value =  google.loader.ClientLocation.latitude;
+		
+		GEvent.addListener(MlMup.map,"click", function(overlay,latlng) {     
+          if (latlng) {   
+            var myHtml = "The GLatLng value is: " + MlMup.map.fromLatLngToDivPixel(latlng) + " at zoom level " + MlMup.map.getZoom();
+            MlMup.map.openInfoWindow(latlng, myHtml);
+          }
+        });
+        
+
+		
+						
 					
  }
 

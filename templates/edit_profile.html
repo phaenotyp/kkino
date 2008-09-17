@@ -4,24 +4,26 @@
   <p>
   Bitte dieses Formular vollständig ausfüllen.
   </p>
-<form action="example.py" id="dataForm">
+  {% if saved %} 
+   <p> &Auml;nderungen wurden gerspeichert.</p>
+  {% endif %}
+<form action="" method="post" id="dataForm">
   <fieldset class="alt">
-                <fieldset>
-                <legend><span>Angaben</span></legend>
-                <ol>
-                <li>
-                <label for="mlurl">Url von MovieLens:</label>
-                <input id="mlurl" name="mlurl" type="text" value="" />
-                </li>
-				<li>
-					<label for="q">Mein Ort</label>
-					<input id="q" name="q" type="text" value="" />
-					<a href="#" onclick="MlMup.showLocation(); return false;"> Ort suchen</a>
-				</li>
-				<li>
-					<input type="hidden" name="lat" value="" id="lat" />
-					<input type="hidden" name="long" value="" id="long" />
-				</li>		
+   <legend><span>Angaben</span></legend>
+     <ol>
+      <li>
+       <label for="mlurl">Url von MovieLens:</label>
+       <input id="mlurl" name="mlurl" type="text" value="{{ profile.movielens_url }}" />
+     </li>
+     <li>
+	<label for="q">Mein Ort</label>
+	<input id="q" name="q" type="text" value="" />
+	<a href="#" onclick="MlMup.showLocation(); return false;"> Ort suchen</a>
+     </li>
+     <li>
+	<input type="hidden" name="lat" value="{{ profile.coordinates.lat }}" id="lat" />
+	<input type="hidden" name="long" value="{{ profile.coordinates.lon }}" id="long" />
+     </li>		
                 <li>
                 <div id="map"></div>
                 </li>
@@ -55,9 +57,15 @@
 	var MlMup = {
 		
 		 mapsLoaded: function() {
-  		
+  	         
+                // if lat/long are set in the profile initialy zoom there
+                // if not center cologne.
+                var lat = document.getElementById("lat").value || 50.940664;
+                var lon = document.getElementById("long").value  || 6.959912; 
+                         
+ 
 		MlMup.map = new google.maps.Map2(document.getElementById("map"));
-  		MlMup.map.setCenter(new google.maps.LatLng(37.4419, -122.1419), 13);
+ 		MlMup.map.setCenter(new google.maps.LatLng(lat, lon), 13);
   		MlMup.map.addControl(new GLargeMapControl());
   		MlMup.map.addControl(new GMapTypeControl());
  		if (google.loader.ClientLocation){

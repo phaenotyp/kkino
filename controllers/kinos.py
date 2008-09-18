@@ -1,10 +1,11 @@
 from google.appengine.ext import webapp
-from models import UserProfile
+from models import UserProfile, Kino
 from settings import * 
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from util import tmpl
 from google.appengine.ext import db
+import cgi
 
 class KinoList(webapp.RequestHandler):
     def get(self):
@@ -23,21 +24,27 @@ class KinoDetail(webapp.RequestHandler):
                                 )) 
 
 
-class KinoAdd(webapp.RequestHandler):
+class KinoEdit(webapp.RequestHandler):
     def get(self): 
-        self.response.out.write("""
-      <html>
-        <body>
-          <form method="post">
-            <div><input type="text" name="name" /></div>
-            <div><input type="submit" value="Sign Guestbook" /></div>
-          </form>
-        </body>
-      </html>""")
-    
+        context = {}  
+        user = users.get_current_user() 
+        if user: 
+            profile = UserProfile.gql("WHERE user = :1",  users.get_current_user()).get()
+            if profile:
+                context['profile'] = profile 
+        page = template.render(tmpl('templates/kinoform.html'),context) 
+        self.response.out.write(page) 
+   
     def post(self):      
-        t = Kino()
-        t.name = cgi.escape(self.request.get('name'))
-        t.put()
+       
+        name = cgi.escape(self.request.get('name')) 
+        k = Kino(name=name)
+        k.geo = db.GeoPt(
+                           float(self.request.get('lat',0)),
+                           float(self.request.get('long',0)) )
+        if self.request.get('adress',None):
+            profile.adress = self.request.get('adress')
+
+        k.put()
         self.redirect('/kinos/') 
 

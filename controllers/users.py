@@ -4,6 +4,7 @@ from settings import *
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from util import tmpl
+import logging
 
 class UserProfileController(webapp.RequestHandler):
     def get(self):
@@ -28,12 +29,17 @@ class UserProfileController(webapp.RequestHandler):
         profile = UserProfile.gql("WHERE user = :1",  user).get()
         if not profile: 
             profile = UserProfile(user=user)
+            logging.debug("New user profile created for user %s" % user) 
       
         # take the posted values and update the profile with it 
         if self.request.get('mlurl',None): 
             profile.movielens_url = db.Link(self.request.get('mlurl'))       
 
-        profile.coordinates  = db.GeoPt( 
+        # take the posted values and update the profile with it 
+        if self.request.get('q',None): 
+            profile.adress = self.request.get('q')       
+
+        profile.geo = db.GeoPt( 
                            float(self.request.get('lat',0)),
                            float(self.request.get('long',0)) )   
         profile.put()

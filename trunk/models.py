@@ -1,15 +1,15 @@
 from google.appengine.ext import db
 
 class Kino(db.Model):
-    name = db.StringProperty()
+    name = db.StringProperty(required=True)
     adress = db.PostalAddressProperty()
-    coordinates = db.GeoPtProperty() 
+    geo = db.GeoPtProperty() 
 
     def get_url(self): 
         return '/kinos/%s/' % self.name.lower() 
 
 class Movie(db.Model):
-    name = db.StringProperty()
+    name = db.StringProperty(required=True)
     imdb = db.LinkProperty() 
 
 class Feature(db.Model):
@@ -18,6 +18,7 @@ class Feature(db.Model):
     datetime = db.DateTimeProperty() 
 
 class UserProfile(db.Model):
-    user = db.UserProperty()
+    user = db.UserProperty(required=True)
     movielens_url = db.LinkProperty()
-    coordinates = db.GeoPtProperty() 
+    adress = db.StringProperty()  
+    geo = db.GeoPtProperty() 

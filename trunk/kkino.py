@@ -37,8 +37,8 @@ application = webapp.WSGIApplication(
 
     # kinos
     ('/kinos/', kinos.KinoList),
+    ('/kinos/add/', kinos.KinoEdit),
     ('/kinos/(.*)/', kinos.KinoDetail),
-    ('/kinos/add/', kinos.KinoAdd),
  
     # movies
     ('/movies/add/', movies.AddMovie),

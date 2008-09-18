@@ -17,12 +17,12 @@
      </li>
      <li>
 	<label for="q">Mein Ort</label>
-	<input id="q" name="q" type="text" value="" />
+	<input id="q" name="q" type="text" value="{{ profile.adress }}" />
 	<a href="#" onclick="MlMup.showLocation(); return false;"> Ort suchen</a>
      </li>
      <li>
-	<input type="hidden" name="lat" value="{{ profile.coordinates.lat }}" id="lat" />
-	<input type="hidden" name="long" value="{{ profile.coordinates.lon }}" id="long" />
+	<input type="hidden" name="lat" value="{{ profile.geo.lat }}" id="lat" />
+	<input type="hidden" name="long" value="{{ profile.geo.lon }}" id="long" />
      </li>		
                 <li>
                 <div id="map"></div>

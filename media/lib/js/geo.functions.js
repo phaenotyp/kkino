@@ -24,10 +24,11 @@
                 ), 13
             );
 
-
- 		MlMup.map.addOverlay(new GMarker(new google.maps.LatLng(
+		var autoMarker = new GMarker(new google.maps.LatLng(
                     google.loader.ClientLocation.latitude,
-                    google.loader.ClientLocation.longitude)),
+                    google.loader.ClientLocation.longitude));
+		
+ 		MlMup.map.addOverlay(autoMarker,
 					{draggable: true}
 					);
 					
@@ -36,10 +37,12 @@
 		
 		GEvent.addListener(MlMup.map,"click", function(overlay,latlng) {     
           if (latlng) {  
-		    
+		  
+		  if(autoMarker){MlMup.map.removeOverlay(autoMarker);}
+		  if(userMarker){MlMup.map.removeOverlay(userMarker);}  
 			 
-            var myHtml = "The GLatLng value is: " + MlMup.map.fromLatLngToDivPixel(latlng) + " at zoom level " +  MlMup.map.getZoom();
-            MlMup.map.openInfoWindow(latlng, myHtml);
+            var userMarker = new GMarker(latlng,{draggable: true});
+			MlMup.map.addOverlay(userMarker);
 			
 			document.getElementById('lat').value = latlng.lat();
 			document.getElementById('long').value = latlng.lng();

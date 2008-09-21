@@ -23,7 +23,12 @@
                     google.loader.ClientLocation.longitude
                 ), 13
             );
+		MlMup.mapEvents();
+		
 
+		
+		
+		
 		MlMup.autoMarker = new GMarker(new google.maps.LatLng(
                     google.loader.ClientLocation.latitude,
                     google.loader.ClientLocation.longitude),{draggable: true});
@@ -61,10 +66,6 @@
           }
         });
         
-
-		
-						
-					
  }
 
 },
@@ -77,6 +78,31 @@
 		$('#long').val(lng);
 		
 	},
+	
+	mapEvents : function(){
+		
+
+	
+	GEvent.addListener( MlMup.map, "wheelup", function(p){
+  		if ( MlMup.map.getZoomLevel() > 0 ) {
+    		MlMup.map.centerAndZoom(
+      		p.scaleRelative( MlMup.map.getCenterLatLng() ),
+      		MlMup.map.getZoomLevel() - 1
+    	);
+  		}
+	}); 	
+	
+	GEvent.addListener( MlMup.map, "wheeldown", function(p){
+  if ( MlMup.map.getZoomLevel() < 16 )
+    MlMup.map.centerAndZoom(
+      p.scaleRelative( MlMup.map.getCenterLatLng(), -1 ),
+      MlMup.map.getZoomLevel() + 1
+    );
+});
+	
+	
+	},
+	
     showLocation: function () {
 	  
 	
@@ -105,11 +131,18 @@
         point = new GLatLng(place.Point.coordinates[1],
                             place.Point.coordinates[0]);
 		
-        marker = new GMarker(point);
-        MlMup.map.addOverlay(marker);
-		marker.openInfoWindowHtml(place.address + '<br>');
-        document.getElementById('long').value = place.Point.coordinates[1] ;
-        document.getElementById('lat').value = place.Point.coordinates[0];
+        MlMup.searchMarker = new GMarker(point,{draggable:true});
+        MlMup.map.addOverlay(MlMup.searchMarker);
+		
+		GEvent.addListener(MlMup.searchMarker, "dragend", function(latlng){
+				
+				MlMup.setValues(latlng.lat(),latlng.lng());
+			
+			});
+		MlMup.searchMarker.openInfoWindowHtml(place.address + '<br>');
+		
+		MlMup.setValues(place.Point.coordinates[1],place.Point.coordinates[0] );
+        
       }
     }
 		

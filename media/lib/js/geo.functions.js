@@ -24,29 +24,40 @@
                 ), 13
             );
 
-		var autoMarker = new GMarker(new google.maps.LatLng(
+		MlMup.autoMarker = new GMarker(new google.maps.LatLng(
                     google.loader.ClientLocation.latitude,
-                    google.loader.ClientLocation.longitude));
+                    google.loader.ClientLocation.longitude),{draggable: true});
+		MlMup.setValues(google.loader.ClientLocation.latitude,google.loader.ClientLocation.longitude);
+ 		
+		MlMup.map.addOverlay(MlMup.autoMarker);
 		
- 		MlMup.map.addOverlay(autoMarker,
-					{draggable: true}
-					);
-					
-		document.getElementById('long').value = google.loader.ClientLocation.longitude ;
-    	document.getElementById('lat').value =  google.loader.ClientLocation.latitude;
 		
-		GEvent.addListener(MlMup.map,"click", function(overlay,latlng) {     
+	 	
+		GEvent.addListener(MlMup.autoMarker, "dragend", function(latlng){
+				
+				MlMup.setValues(latlng.lat(),latlng.lng());
+			
+			});
+
+		
+		GEvent.addListener(MlMup.map,"click", function(overlay,latlng) {
+			     
           if (latlng) {  
 		  
-		  if(autoMarker){MlMup.map.removeOverlay(autoMarker);}
-		  if(userMarker){MlMup.map.removeOverlay(userMarker);}  
+		  if(MlMup.autoMarker){MlMup.map.removeOverlay(MlMup.autoMarker);}
+		  if(MlMup.userMarker){MlMup.map.removeOverlay(MlMup.userMarker);}  
 			 
-            var userMarker = new GMarker(latlng,{draggable: true});
-			MlMup.map.addOverlay(userMarker);
+            MlMup.userMarker = new GMarker(latlng,{draggable: true});
+			MlMup.map.addOverlay(MlMup.userMarker);
 			
-			document.getElementById('lat').value = latlng.lat();
-			document.getElementById('long').value = latlng.lng();
+			MlMup.setValues(latlng.lat(),latlng.lng());
+		
+			  GEvent.addListener(MlMup.userMarker, "dragend", function(latlng){
+				
+				MlMup.setValues(latlng.lat(),latlng.lng());
 			
+			});
+		
           }
         });
         
@@ -57,6 +68,15 @@
  }
 
 },
+
+	setValues : function(lat,lng){
+		
+		
+		
+		$('#lat').val(lat);
+		$('#long').val(lng);
+		
+	},
     showLocation: function () {
 	  
 	

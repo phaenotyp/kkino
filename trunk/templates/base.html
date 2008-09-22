@@ -16,8 +16,23 @@
         </head>
         <body>
         <div id="page">
-           <div id="header">
+           <div id="header" id="fnav">
               <h1>MovieLens MashUp</h1>
+			  <ul class="navigation">
+			  	<li  ><a href="http://localhost:9999/today/">Filme heute</a></li>
+				<li ><a href="http://localhost:9999/kinos/">Kinos</a></li>
+				<li  ><a href="http://localhost:9999/movies/">Filme</a></li>
+			  </ul>
+			  <ul class="navigation" id="pnav">
+			  	
+				{% if user %}
+				<li >Angemeldet als:</li>
+				<li ><a href="http://localhost:9999/profiles/">Mein Profil</a></li>
+				<li ><a href="http://localhost:9999/profiles/">Logout</a></li>
+				{% else %}
+				<li ><a href="http://localhost:9999/login/">Anmelden</a></li>
+				{% endif %}
+			</ul>
            </div> <!-- END #header -->
            <div id="content">
   {% block content %}    

@@ -1,0 +1,33 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+
+<h2>{{ movie.name }}</h2>
+<h3>{{ feature.datetime|date:"d.m.Y. H:i" }}{{ feature.kino.name }}</h3>
+
+<ul>
+  {% for feat in movie.features %}
+  <li>
+    <span class="date">{{ feat.datetime|date:"d.m.Y. H:i" }}</span>
+    <span class="kino">{{ feat.kino.name }}</span>
+    {% if feat.num_going %} 
+    ({{ feat.num_going }})
+    {% endif %}
+  </li>
+   {% endfor %}
+</ul>
+
+
+Going: 
+<ul>
+   {% for user in feature.going %}
+  <li>{{ user }} </li>
+   {% endfor %}
+
+{% if user %} 
+   {% if not going %}<form method="post"><input type="submit" value="I'm Going!" /><input type="hidden" name="going" value="true"></form>{% else %} 
+<form method="post"><input type="submit" value="Not Really." /><input type="hidden" name="going" value="false"></form>{% endif %} 
+</ul>
+{% endif %} 
+
+{% endblock content %} 

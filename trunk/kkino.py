@@ -42,13 +42,13 @@ application = webapp.WSGIApplication(
  
     # movies
     ('/movies/add/', movies.AddMovie),
+    ('/movies/(.*)/', movies.MovieDetail),
     ('/today/', features.FeatureList),
     ('/upcoming/', movies.MoviesUpcoming), 
     ('/features/(.*)/', features.FeatureDetail ),  
 
     # ('/movie/(.*)', Movielisting ),
     ('/movies/get_original_name/', GetIMDBName),
-     
 
     # users 
     ('/profile/', users.UserProfileController ), 

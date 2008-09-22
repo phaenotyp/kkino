@@ -3,6 +3,7 @@
 {% block content %} 
 
 <h2>{{ kino.name }}</h2>
+<img src="{{ kino.static_map }}" />
 <ul>
    {% for feat in kino.features %}
   <li><span class="movie">{{ feat.movie.name }}</span>

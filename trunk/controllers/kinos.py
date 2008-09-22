@@ -3,7 +3,7 @@ from models import UserProfile, Kino, Feature
 from settings import * 
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
-from util import tmpl
+from util import tmpl, add_user_to_context
 from google.appengine.ext import db
 import cgi
 
@@ -16,19 +16,25 @@ class KinoList(webapp.RequestHandler):
 class KinoDetail(webapp.RequestHandler):
     def get(self, slug):
         k = Kino.all().filter('slug =', slug ).get() 
-        self.response.out.write(template.render(tmpl('templates/kinodetail.html'), 
-                               {'kino': k, 'slug': slug, } 
-                                )) 
-
+        context = {'kino': k, 'slug': slug } 
+        context = add_user_to_context(context)
+        self.response.out.write(
+               template.render(tmpl('templates/kinodetail.html'), 
+                    context 
+               )) 
 
 class KinoEdit(webapp.RequestHandler):
     def get(self): 
         context = {}  
         user = users.get_current_user() 
         if user: 
+            context['user'] = user
+            context['logouturl'] = users.create_logout_url(self.request.url)
             profile = UserProfile.gql("WHERE user = :1",  users.get_current_user()).get()
             if profile:
                 context['profile'] = profile 
+        else:
+             context['logouturl'] = users.create_login_url(self.request.url)
         page = template.render(tmpl('templates/kinoform.html'),context) 
         self.response.out.write(page) 
    

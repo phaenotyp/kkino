@@ -3,6 +3,7 @@ from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from util import tmpl, add_user_to_context 
 from settings import *
+from models import Movie 
 
 class AddMovie(webapp.RequestHandler):
     def get(self):
@@ -30,6 +31,18 @@ class MovieDetail(webapp.RequestHandler):
              ) 
          ) 
          
+class MovieList(webapp.RequestHandler): 
+     def get(self):
+         m = Movie.all()
+         context = { 'movies': m } 
+         context = add_user_to_context(context)
+         self.response.out.write( 
+             template.render( 
+                 tmpl('templates/movielist.html'),
+                 context 
+             ) 
+         ) 
+ 
 
 class MoviesToday(webapp.RequestHandler):
     def get(self):

@@ -25,6 +25,7 @@ class KinoDetail(webapp.RequestHandler):
                template.render(tmpl('templates/kinodetail.html'), 
                     context 
                )) 
+    
 
 class KinoEdit(webapp.RequestHandler):
     def get(self): 

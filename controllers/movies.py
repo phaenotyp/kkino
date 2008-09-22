@@ -18,6 +18,19 @@ class AddMovie(webapp.RequestHandler):
         t.put()
         self.redirect('/kinos/')
 
+ class MovieDetail(self, slug): 
+     def get(self, slug):
+         m = Movie.all().filter('slug =', slug ).get()
+         context = { 'movie': m } 
+         context = add_user_to_context(context)
+         self.response.out.write( 
+             template.render( 
+                 tmpl('templates/moviedetail.html'),
+                 context 
+             ) 
+         ) 
+         
+
 class MoviesToday(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'

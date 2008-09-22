@@ -10,9 +10,12 @@ import cgi
 class KinoList(webapp.RequestHandler):
     def get(self):
         cinemas = db.GqlQuery("SELECT * FROM Kino ORDER BY name ASC").fetch(20) 
-        self.response.out.write(template.render(tmpl('templates/kinolist.html'), 
-                               {'kinos':cinemas } 
-                                )) 
+        context = {'kinos':cinemas } 
+        context = add_user_to_context(context) 
+        self.response.out.write(
+            template.render(tmpl('templates/kinolist.html'), 
+            context )) 
+
 class KinoDetail(webapp.RequestHandler):
     def get(self, slug):
         k = Kino.all().filter('slug =', slug ).get() 
@@ -39,7 +42,6 @@ class KinoEdit(webapp.RequestHandler):
         self.response.out.write(page) 
    
     def post(self):      
-       
         name = cgi.escape(self.request.get('name')) 
         k = Kino(name=name)
         k.geo = db.GeoPt(

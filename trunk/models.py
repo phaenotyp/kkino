@@ -13,10 +13,10 @@ class Kino(db.Model):
     @property 
     def static_map_url(self):
         if self.geo:
-           url = 'http://maps.google.com/staticmap?marker=%f,%f&size=%s&key=%s' % (self.geo.lat, self.geo.lon, STATIC_MAPS_SIZE, GOOGLE_MAPS_KEY) 
-           return url
+            url = 'http://maps.google.com/staticmap?markers=%f,%f&size=%s&key=%s' % (self.geo.lat, self.geo.lon, STATIC_MAPS_SIZE, GOOGLE_MAPS_KEY) 
+            return url
         else: 
-           return None
+            return None
 
     @property 
     def get_url(self): 

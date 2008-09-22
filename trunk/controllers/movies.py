@@ -18,7 +18,7 @@ class AddMovie(webapp.RequestHandler):
         t.put()
         self.redirect('/kinos/')
 
- class MovieDetail(self, slug): 
+class MovieDetail(webapp.RequestHandler): 
      def get(self, slug):
          m = Movie.all().filter('slug =', slug ).get()
          context = { 'movie': m } 

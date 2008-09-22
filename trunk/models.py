@@ -23,7 +23,7 @@ class Kino(db.Model):
     def json(self): 
         """Returns a json represtation of the Kino-Model"""
         if self.geo: 
-            gson = '{lat:%f,lon:%f }' % ( self.lat, self.lon )  
+            gson = '{lat:%f,lon:%f }' % ( self.geo.lat, self.geo.lon )  
         else:
             gson = 'false'
         return """{ name:'%s', geo:%s, adress:'%s', url:'%s'  }""" % ( self.name, gson, self.adress, self.get_url )

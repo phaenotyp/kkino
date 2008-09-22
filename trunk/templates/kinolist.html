@@ -19,17 +19,13 @@
     <script type="text/javascript">
 
     //<![CDATA[
-	
 	var kinoGeo = {
-		
-		kinos : {
-			name: "metronom",
-			lat: 50.95 ,
-			lng: 6.959912
-		}
-	}
-	
-
+          kinos : [ 
+        {% for k in kinos %} 
+            {{ k.json }},  
+        {% endfor %} 
+          ] 
+	}; 
     //]]>
 	
     </script>

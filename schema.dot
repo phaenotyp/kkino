@@ -1,0 +1,9 @@
+digraph models { 
+
+  Kino -> Feature -> Movie;
+
+  User -> Rating -> Movie; 
+
+  User -> Kino [label="Geo", color=green];
+
+} 

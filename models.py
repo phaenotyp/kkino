@@ -1,6 +1,7 @@
 from google.appengine.ext import db
 from google.appengine.api import users
 from util import sluggify
+from settings import *
 
 class Kino(db.Model):
     """Movie-Theater"""
@@ -8,6 +9,14 @@ class Kino(db.Model):
     adress = db.PostalAddressProperty()
     geo = db.GeoPtProperty() 
     slug = db.StringProperty()
+
+    @property 
+    def static_map_url(self):
+        if self.geo:
+           url = 'http://maps.google.com/staticmap?marker=%f,%f&key=%s' % (self.geo.lat, self.geo.lon, settings.GOOGLE_MAPS_KEY) 
+           return url
+        else: 
+           return None
 
     @property 
     def get_url(self): 

@@ -1,12 +1,15 @@
 from google.appengine.ext import webapp
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
-from util import tmpl
+from util import tmpl, add_user_to_context 
+from settings import *
 
 class AddMovie(webapp.RequestHandler):
     def get(self):
         """Displays a form to add a new movie to the datastore""" 
-        self.response.out.write(template.render(tmpl('templates/addmovie.html'), {'user': user, 'api_key': GOOGLE_MAPS_KEY}))
+        context = { 'api_key': GOOGLE_MAPS_KEY}
+        context = add_user_to_context(context) 
+        self.response.out.write(template.render(tmpl('templates/addmovie.html'), context ))
 
     def post(self):
         """Recieves the form for a new movie and puts it into the datastore"""
@@ -14,7 +17,6 @@ class AddMovie(webapp.RequestHandler):
         t.name = cgi.escape(self.request.get('name'))
         t.put()
         self.redirect('/kinos/')
-
 
 class MoviesToday(webapp.RequestHandler):
     def get(self):
@@ -33,4 +35,3 @@ class MoviesUpcoming(webapp.RequestHandler):
             self.respose.out.write( showing.movie.name )
 
         self.response.out.write('KoelnKino')
-

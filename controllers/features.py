@@ -3,7 +3,7 @@ from models import UserProfile, Feature
 from settings import * 
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
-from util import tmpl
+from util import tmpl, add_user_to_context
 from google.appengine.ext import db
 import cgi
 
@@ -17,8 +17,11 @@ class FeatureList(webapp.RequestHandler):
             if len(f.going) > 0:
                 f.goers = len(f.going)  
 
-        self.response.out.write(template.render(tmpl('templates/featurelist.html'), 
-                               {'features':feats, 'len':len(feats) } 
+        context = {'features':feats, 'len':len(feats) } 
+        add_user_to_context(context)  
+        self.response.out.write(
+             template.render(tmpl('templates/featurelist.html'), 
+             context 
                                 )) 
 
 class FeatureDetail(webapp.RequestHandler):

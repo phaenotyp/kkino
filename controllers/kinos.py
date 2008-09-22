@@ -1,5 +1,5 @@
 from google.appengine.ext import webapp
-from models import UserProfile, Kino
+from models import UserProfile, Kino, Feature
 from settings import * 
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
@@ -10,17 +10,14 @@ import cgi
 class KinoList(webapp.RequestHandler):
     def get(self):
         cinemas = db.GqlQuery("SELECT * FROM Kino ORDER BY name ASC").fetch(20) 
-        for c in cinemas: 
-           c.url = c.get_url()
-
-        self.response.out.write(template.render(tmpl('templates/cinemas.html'), 
+        self.response.out.write(template.render(tmpl('templates/kinolist.html'), 
                                {'kinos':cinemas } 
                                 )) 
 class KinoDetail(webapp.RequestHandler):
-    def get(self, name):
-        cinema = Kino.all().filter('name =', name ) 
-        self.response.out.write(template.render(tmpl('templates/cinema.html'), 
-                               {'kino': cinema, 'name': name} 
+    def get(self, slug):
+        k = Kino.all().filter('slug =', slug ).get() 
+        self.response.out.write(template.render(tmpl('templates/kinodetail.html'), 
+                               {'kino': k, 'slug': slug, } 
                                 )) 
 
 

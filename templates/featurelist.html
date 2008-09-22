@@ -1,0 +1,18 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+
+<h2>Filme Heute</h2>
+   {{ len }}
+<ul>
+   {% for feat in features %} 
+  <li><a href="{{ feat.get_url }}"><span class="movie">{{ feat.movie.name }}</span>
+    <span class="date">{{ feat.datetime|date:"d.m.Y. H:i" }}</span>
+    <span class="kino">{{ feat.kino.name }}</span>
+   {% if feat.goers %}<span>({{ feat.goers }})</span>{% endif %} 
+   </a> 
+  </li>
+   {% endfor %}
+</ul>
+
+{% endblock content %} 

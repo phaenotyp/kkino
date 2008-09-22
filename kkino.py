@@ -7,7 +7,7 @@ from models import Movie, Feature, Kino, UserProfile
 from google.appengine.ext import db
 import util
 
-from controllers import users, kinos, movies
+from controllers import users, kinos, movies, features
 
 def tmpl(name): util.tmpl(name) 
 
@@ -42,10 +42,13 @@ application = webapp.WSGIApplication(
  
     # movies
     ('/movies/add/', movies.AddMovie),
-    ('/today/', movies.MoviesToday),
+    ('/today/', features.FeatureList),
     ('/upcoming/', movies.MoviesUpcoming), 
+    ('/features/(.*)/', features.FeatureDetail ),  
+
     # ('/movie/(.*)', Movielisting ),
     ('/movies/get_original_name/', GetIMDBName),
+     
 
     # users 
     ('/profile/', users.UserProfileController ), 

@@ -3,7 +3,7 @@
 {% block content %} 
 
 <h2>{{ feature.movie.name }}</h2>
-<h3>{{ feature.datetime|date:"d.m.Y. H:i" }}{{ feature.kino.name }}</h3>
+<h3>{{ feature.datetime|date:"d.m.Y. H:i" }} {{ feature.kino.name }}</h3>
 
 Going: 
 <ul>
@@ -11,10 +11,8 @@ Going:
   <li>{{ user }} </li>
    {% endfor %}
 
-{% if user %} 
    {% if not going %}<form method="post"><input type="submit" value="I'm Going!" /><input type="hidden" name="going" value="true"></form>{% else %} 
 <form method="post"><input type="submit" value="Not Really." /><input type="hidden" name="going" value="false"></form>{% endif %} 
 </ul>
-{% endif %} 
 
 {% endblock content %} 

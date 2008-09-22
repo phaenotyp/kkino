@@ -99,7 +99,7 @@ h1
 	padding: 0 35px;
 	font-size: 220%;
 	font-weight: normal;
-	line-height: 82px;
+	line-height: 65px;
 }
 
 
@@ -127,4 +127,31 @@ form
 input.text
 {
   width: 10.5em;
+}
+
+/* Navigation ------ */
+ul.navigation{
+	list-style: none;
+}
+.navigation li{
+	float: left;
+	color: #fff;
+	margin: 0pt 4px 0pt 0pt;
+	
+	padding: 3px;
+}
+#pnav{
+	float: right;
+	margin-right: 4px;
+}
+#fnav{
+	margin-left: 4px;
+}
+.navigation li a{
+	color: #fff;
+	text-decoration: none;
+}
+.navigation li a:hover{
+	
+	text-decoration: underline;
 }

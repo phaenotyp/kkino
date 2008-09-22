@@ -47,10 +47,21 @@
 		
 		GEvent.addListener(MlMup.map,"click", function(overlay,latlng) {
 			     
-          if (latlng) {  
+				 MlMup.addUserMarker(overlay,latlng);
+
+        });
+        
+ }
+
+},
+
+	addUserMarker : function (overlay,latlng){
+		
+		if (latlng) {  
 		  
 		  if(MlMup.autoMarker){MlMup.map.removeOverlay(MlMup.autoMarker);}
-		  if(MlMup.userMarker){MlMup.map.removeOverlay(MlMup.userMarker);}  
+		  if(MlMup.userMarker){MlMup.map.removeOverlay(MlMup.userMarker);}
+		  if(MlMup.searchMarker){MlMup.map.removeOverlay(MlMup.searchMarker);}  
 			 
             MlMup.userMarker = new GMarker(latlng,{draggable: true});
 			MlMup.map.addOverlay(MlMup.userMarker);
@@ -64,11 +75,9 @@
 			});
 		
           }
-        });
-        
- }
-
-},
+		
+		
+	},
 
 	setValues : function(lat,lng){
 		

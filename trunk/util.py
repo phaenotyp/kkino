@@ -22,3 +22,9 @@ def get_user_movies(user):
         # TODO: parse via feedparser 
          
 def tmpl(name): return os.path.join(os.path.dirname(__file__), name)
+
+
+def sluggify(name):  
+    return name.lower().replace(' ', '-')
+
+

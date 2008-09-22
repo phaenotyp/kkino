@@ -10,7 +10,7 @@ import cgi
 class KinoList(webapp.RequestHandler):
     def get(self):
         cinemas = db.GqlQuery("SELECT * FROM Kino ORDER BY name ASC").fetch(20) 
-        context = {'kinos':cinemas } 
+        context = {'kinos':cinemas, 'api_key': GOOGLE_MAPS_KEY   } 
         context = add_user_to_context(context) 
         self.response.out.write(
             template.render(tmpl('templates/kinolist.html'), 
@@ -19,7 +19,7 @@ class KinoList(webapp.RequestHandler):
 class KinoDetail(webapp.RequestHandler):
     def get(self, slug):
         k = Kino.all().filter('slug =', slug ).get() 
-        context = {'kino': k, 'slug': slug } 
+        context = {'kino': k, 'slug': slug  } 
         context = add_user_to_context(context)
         self.response.out.write(
                template.render(tmpl('templates/kinodetail.html'), 

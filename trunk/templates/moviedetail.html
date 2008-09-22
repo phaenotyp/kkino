@@ -8,8 +8,8 @@
 <ul>
   {% for feat in movie.features %}
   <li>
-    <span class="date">{{ feat.datetime|date:"d.m.Y. H:i" }}</span>
-    <span class="kino">{{ feat.kino.name }}</span>
+    <a href="{{ feat.get_url }}"><span class="date">{{ feat.datetime|date:"d.m.Y. H:i" }}</span>
+    <span class="kino">{{ feat.kino.name }}</span></a>
     {% if feat.num_going %} 
     ({{ feat.num_going }})
     {% endif %}
@@ -17,17 +17,16 @@
    {% endfor %}
 </ul>
 
-
-Going: 
+{% if movie.ratings %}
+<br />Ratings:
 <ul>
-   {% for user in feature.going %}
-  <li>{{ user }} </li>
+  {% for rating in movie.ratings %}
+  <li>
+    <span class="user">{{ rating.user.nickname }}</span>
+    <span class="rating">{{ rating.mlrating }}</span>
    {% endfor %}
-
-{% if user %} 
-   {% if not going %}<form method="post"><input type="submit" value="I'm Going!" /><input type="hidden" name="going" value="true"></form>{% else %} 
-<form method="post"><input type="submit" value="Not Really." /><input type="hidden" name="going" value="false"></form>{% endif %} 
 </ul>
-{% endif %} 
+{% endif %}
+
 
 {% endblock content %} 

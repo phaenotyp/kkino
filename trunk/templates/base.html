@@ -19,18 +19,18 @@
            <div id="header" id="fnav">
               <h1>MovieLens MashUp</h1>
 			  <ul class="navigation">
-			  	<li  ><a href="http://localhost:9999/today/">Filme heute</a></li>
-				<li ><a href="http://localhost:9999/kinos/">Kinos</a></li>
-				<li  ><a href="http://localhost:9999/movies/">Filme</a></li>
+			  	<li ><a href="/today/">Filme heute</a></li>
+				<li ><a href="/kinos/">Kinos</a></li>
+				<li ><a href="/movies/">Filme</a></li>
 			  </ul>
 			  <ul class="navigation" id="pnav">
 			  	
 				{% if user %}
-				<li >Angemeldet als: {{user.nickname}}</li>
-				<li ><a href="http://localhost:9999/profile/">Mein Profil</a></li>
-				<li ><a href="http://localhost:9999/logout/">Logout</a></li>
+				<li >Angemeldet als: {{ user.nickname }}</li>
+				<li ><a href="/profile/">Mein Profil</a></li>
+				<li ><a href="{{ logouturl }}">Logout</a></li>
 				{% else %}
-				<li ><a href="http://localhost:9999/login/">Anmelden</a></li>
+				<li ><a href="{{ loginurl }}">Anmelden</a></li>
 				{% endif %}
 			</ul>
            </div> <!-- END #header -->

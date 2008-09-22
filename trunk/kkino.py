@@ -43,6 +43,7 @@ application = webapp.WSGIApplication(
     # movies
     ('/movies/add/', movies.AddMovie),
     ('/movies/(.*)/', movies.MovieDetail),
+    ('/movies/', movies.MovieList),
     ('/today/', features.FeatureList),
     ('/upcoming/', movies.MoviesUpcoming), 
     ('/features/(.*)/', features.FeatureDetail ),  

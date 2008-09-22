@@ -50,7 +50,7 @@ class Movie(db.Model):
     def put(self):  
         """Overide put so that slug gets updated by name""" 
         self.slug = sluggify(self.name) 
-        super(Kino, self).put()  
+        super(Movie, self).put()  
 
     @property 
     def get_url(self): 

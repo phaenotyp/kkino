@@ -1,0 +1,27 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+
+{% if profile %}
+<h2>{{ profile.nick }}</h2>
+
+Movies this User is seeing: 
+<ul>
+   {% for feat in profile.features %}
+  <li>
+<a href="{{ feat.get_url }}"><span class="movie">{{ feat.movie.name }}</span>
+    <span class="date">{{ feat.datetime|date:"d.m.Y. H:i" }}</span>
+    <span class="kino">{{ feat.kino.name }}</span>
+   {% if feat.goers %}<span>({{ feat.goers }})</span>{% endif %} 
+   </a> 
+   </li> 
+   {% endfor %}
+
+   {% if not going %}<form method="post"><input type="submit" value="I'm Going!" /><input type="hidden" name="going" value="true"></form>{% else %} 
+<form method="post"><input type="submit" value="Not Really." /><input type="hidden" name="going" value="false"></form>{% endif %} 
+</ul>
+{% else %}
+  <p>Userpofile "{{ nick }}" not found</p>
+{% endif %}
+
+{% endblock content %} 

@@ -3,7 +3,7 @@ from models import UserProfile
 from settings import * 
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
-from util import tmpl
+from util import tmpl, add_user_to_context
 import logging
 
 class UserProfileController(webapp.RequestHandler):
@@ -18,6 +18,7 @@ class UserProfileController(webapp.RequestHandler):
         else:
             #users.create_login_url(self.request.path)
             self.response.out.write('<a href="%s">Login</a>' % users.create_login_url(self.request.uri))
+            
             # TODO: display read-only profile
 
     def post(self):
@@ -35,7 +36,9 @@ class UserProfileController(webapp.RequestHandler):
         if self.request.get('mlurl',None): 
             profile.movielens_url = db.Link(self.request.get('mlurl'))       
 
-        # take the posted values and update the profile with it 
+        if self.request.get('nick',None): 
+            profile.nick = self.request.get('nick') 
+
         if self.request.get('q',None): 
             profile.adress = self.request.get('q')       
 
@@ -53,3 +56,19 @@ class UserProfileController(webapp.RequestHandler):
         )
 
         
+class PublicProfile(webapp.RequestHandler):
+    def get(self, nick):
+        context = add_user_to_context()  
+          
+        p = UserProfile.all().filter('nick =', nick ).get()
+        if p:
+            context['profile'] = p
+        else: 
+            context['nick'] = nick 
+         
+        self.response.out.write(
+             template.render(tmpl('templates/public_profile.html'),
+             context
+        ))
+
+

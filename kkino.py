@@ -53,6 +53,7 @@ application = webapp.WSGIApplication(
 
     # users 
     ('/profile/', users.UserProfileController ), 
+    ('/profile/(.*)/', users.PublicProfile ), 
 
     # development 
     # inserts test data into the datastore. call only once 

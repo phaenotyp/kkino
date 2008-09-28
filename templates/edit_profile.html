@@ -1,9 +1,6 @@
 {% extends "base.html" %} 
 
 {% block content %} 
-  <p>
-  Bitte dieses Formular vollständig ausfüllen.
-  </p>
   {% if saved %} 
    <p> &Auml;nderungen wurden gerspeichert.</p>
   {% endif %}
@@ -11,6 +8,11 @@
   <fieldset class="alt">
    <legend><span>Angaben</span></legend>
      <ol>
+      <li>
+       <label for="nick">Nickname:</label>
+       <input id="nick" name="nick" type="text" value="{{ profile.nick }}" />
+     </li>
+ 
       <li>
        <label for="mlurl">Url von MovieLens:</label>
        <input id="mlurl" name="mlurl" type="text" value="{{ profile.movielens_url }}" />

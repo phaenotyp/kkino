@@ -11,8 +11,10 @@ Going:
   <li>{{ user }} </li>
    {% endfor %}
 
+{% if user %} 
    {% if not going %}<form method="post"><input type="submit" value="I'm Going!" /><input type="hidden" name="going" value="true"></form>{% else %} 
 <form method="post"><input type="submit" value="Not Really." /><input type="hidden" name="going" value="false"></form>{% endif %} 
+{% endif %} 
 </ul>
 
 {% endblock content %} 

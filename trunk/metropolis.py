@@ -8,6 +8,7 @@ def splitpair(pair):
     return (kv[0], kv[1]) 
 
 def metropolis(str):
+    str = str.decode("iso-8859-1")
     movies = []
     parts = ( 'name', 'time1', 'time2', 'info1', 'info2' )
     lastnumber = ''
@@ -34,7 +35,7 @@ def metropolis(str):
                    if m: movies.append(m) 
                    m = Movie()  
                    lastnumber=number
-                print number,' ' ,part, ' ', val 
+                #print number,' ' ,part, ' ', val 
                 # TODO regex
                 if part == 'name': 
                     m.name = val

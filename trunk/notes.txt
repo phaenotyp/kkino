@@ -13,12 +13,22 @@ kino.de  hat eine filmstartsliste
  
   imports -> features 
 
-  
-  
 
+from console: 
 
-  commit: 
-   - put the date of the first feature of a movie into the movie model.
-   - changed the feature-model to update the first feature property of the
-     movie of neccesary 
-   - added nick to userProfile
+url = 'http://www.metropolis-koeln.de/aktualisierung/aktuell.txt'
+
+from google.appengine.api.urlfetch import fetch
+
+res = fetch(url) 
+if res.status_code == 200:
+    from metropolis import metropolis
+    ms = metropolis(res.content) 
+    for m in ms:
+        print m.name
+        print ', '.join(m.s)
+        print ' '
+        
+else: 
+    print 'fail' 
+

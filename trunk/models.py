@@ -3,6 +3,12 @@ from google.appengine.api import users
 from util import sluggify
 from settings import *
 
+
+# MODEL.get_or_insert 
+# MODEL.by_key_name 
+
+# check out Counter and CounterConfig in talk-slides 
+
 class Kino(db.Model):
     """Movie-Theater"""
     name = db.StringProperty(required=True)
@@ -27,7 +33,6 @@ class Kino(db.Model):
         else:
             gson = 'false'
         return """{ name:'%s', geo:%s, adress:'%s', url:'%s'  }""" % ( self.name, gson, self.adress, self.get_url )
-     
 
     @property 
     def get_url(self): 
@@ -43,6 +48,10 @@ class Movie(db.Model):
     name = db.StringProperty(required=True)
     imdb = db.LinkProperty() 
     slug = db.StringProperty()
+    # Date of the first showing 
+    # should this be a reference to the feature-instance 
+    first_feat = db.DateTimeProperty()  
+    
 
     def rating_by_user(self, user): 
         return MLRating.gql('WHERE user = :1 and movie = :2', user, self).fetch(1)[0].mlrating 
@@ -57,14 +66,13 @@ class Movie(db.Model):
         """This can be used in templates cause it's a property""" 
         return '/movies/%s/' % self.slug 
 
-  
-
 class Feature(db.Model):
     movie = db.ReferenceProperty(reference_class=Movie, collection_name="features")
     kino = db.ReferenceProperty(reference_class=Kino, collection_name="features")
     datetime = db.DateTimeProperty() 
     going = db.ListProperty(users.User) 
-
+   
+    @property 
     def num_going(self): 
         if len(self.going)>0: 
             return len(self.going) 
@@ -74,6 +82,20 @@ class Feature(db.Model):
     @property
     def get_url(self):
         return '/features/%s/' % self.key().id()
+
+    def put(self):  
+        """The first showing of a movie gets denormalized into the movie model.
+           Check if this feature is the earliest of its movie and update the movie-instance accordingliy""" 
+                                                        
+        num_earlier_feats = Feature.gql(
+           "WHERE first_feat < :1", self.datetime
+           ).count(2)
+        if num_earlier_feats > 0: 
+            self.movie.first_feat = self.datetime 
+            self.movie.put() 
+        super(Feature, self).put()  
+
+
 
 class MLRating(db.Model): 
     """A Movie-Rating as pulled from movielens.org.
@@ -87,17 +109,23 @@ class MLRating(db.Model):
     
 class UserProfile(db.Model):
     user = db.UserProperty(required=True)
+    nick =  db.StringProperty() 
     movielens_url = db.LinkProperty()
     adress = db.StringProperty()  
     geo = db.GeoPtProperty() 
  
     @property 
     def features(self): 
-        """Returns a query objects of all the Features this user is attending."""
+        """Returns a query object of all the Features this user is attending."""
         return Feature.gql('WHERE going = :1', self.user) 
  
     @property 
     def ratings(self): 
         """Returns a query-object of all the ratings of the user this profile blongs to""" 
         return MLRating.gql('WHERE user = :1', self.user) 
-   
+
+    def put(self):  
+        """Prepopulates the Nickname-field with googles-nickname thing."""
+        if not self.nick:
+            self.nick = self.user.nickname().split('@')[0]                         
+        super(UserProfile, self).put()  

@@ -3,6 +3,22 @@ http://www.metropolis-koeln.de/aktualisierung/aktuell.txt
 http://www.rex-koeln.de/aktualisierung/aktuell.txt
 
 programmkino.de
+cineman.de
+kino.de  hat eine filmstartsliste   
 
+
+
+
+  kino.de -> movies 
+ 
+  imports -> features 
 
   
+  
+
+
+  commit: 
+   - put the date of the first feature of a movie into the movie model.
+   - changed the feature-model to update the first feature property of the
+     movie of neccesary 
+   - added nick to userProfile

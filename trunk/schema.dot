@@ -5,5 +5,15 @@ digraph models {
   User -> Rating -> Movie; 
 
   User -> Kino [label="Geo", color=green];
+  
+  Feature -> User[label="going", color=blue]
+
+  Kino[label="Cinema", shape=box];
+  Rating[shape=box];
+  Movie[shape=box];
+  Feature[shape=box];
+
+  { rank = same;
+     Kino; Feature; Movie };
 
 } 

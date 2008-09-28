@@ -12,17 +12,16 @@ class FeatureList(webapp.RequestHandler):
         feats = Feature.all().fetch(50)  
 
         # denormalize the length of going into the feature object
-        # 
         for f in feats:
             if len(f.going) > 0:
                 f.goers = len(f.going)  
 
         context = {'features':feats, 'len':len(feats) } 
-        add_user_to_context(context)  
+        context = add_user_to_context(context)  
         self.response.out.write(
              template.render(tmpl('templates/featurelist.html'), 
              context 
-                                )) 
+        )) 
 
 class FeatureDetail(webapp.RequestHandler):
     def get(self, id):
@@ -34,8 +33,11 @@ class FeatureDetail(webapp.RequestHandler):
         user = users.get_current_user() 
         if user:
             context['user'] = user
+            context['logouturl'] = users.create_logout_url("/features/%s/" % id)
             if user in f.going: 
                 context['going'] = True 
+        else:
+            context['loginurl'] = users.create_login_url("/features/%s/" % id)
  
         page = template.render(tmpl('templates/featuredetail.html'),context) 
         self.response.out.write(page) 

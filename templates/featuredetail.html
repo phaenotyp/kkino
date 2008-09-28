@@ -8,7 +8,7 @@
 Going: 
 <ul>
    {% for user in feature.going %}
-  <li>{{ user }} </li>
+  <li><a href="{{ user.profile_url }}">{{ user }}</a></li>
    {% endfor %}
 
 {% if user %} 

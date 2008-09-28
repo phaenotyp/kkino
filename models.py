@@ -95,8 +95,6 @@ class Feature(db.Model):
             self.movie.put() 
         super(Feature, self).put()  
 
-
-
 class MLRating(db.Model): 
     """A Movie-Rating as pulled from movielens.org.
 
@@ -113,6 +111,10 @@ class UserProfile(db.Model):
     movielens_url = db.LinkProperty()
     adress = db.StringProperty()  
     geo = db.GeoPtProperty() 
+
+    @property
+    def profile_url():
+        return '/profiles/%s/' % self.nick
  
     @property 
     def features(self): 

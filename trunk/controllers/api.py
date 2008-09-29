@@ -21,30 +21,24 @@ class KinoDetail(webapp.RequestHandler):
             k.json
         ) 
 
-class KinoEdit(webapp.RequestHandler):
-    def get(self): 
-        context = { 'api_key':GOOGLE_MAPS_KEY }  
-        user = users.get_current_user() 
-        if user: 
-            context['user'] = user
-            context['logouturl'] = users.create_logout_url(self.request.url)
-            profile = UserProfile.gql("WHERE user = :1",  users.get_current_user()).get()
-            if profile:
-                context['profile'] = profile 
-        else:
-             context['logouturl'] = users.create_login_url(self.request.url)
-        page = template.render(tmpl('templates/kinoform.html'),context) 
-        self.response.out.write(page) 
-   
-    def post(self):      
-        name = cgi.escape(self.request.get('name')) 
-        k = Kino(name=name)
-        k.geo = db.GeoPt(
-                           float(self.request.get('lat',0)),
-                           float(self.request.get('long',0)) )
-        if self.request.get('adress',None):
-            profile.adress = self.request.get('adress')
+class KinoDetailFeature(webapp.RequestHandler):
+    def get(self, slug):
+        k = Kino.all().filter('slug =', slug ).get() 
+        self.response.out.write(
+            "{ kino:'%s', features:[%s] }" % ( 
+                 k.name, 
+                 ', '.join([self.feature_json(f) for f in k.features])
+             )  
+        ) 
 
-        k.put()
-        self.redirect('/kinos/') 
+    def feature_json(self, feature):
+        return "{ movie:'%s', datetime:'%s', going:[%s]  }" % (
+                 feature.movie.name,
+                 feature.datetime.strftime("%d.%m.%Y %H:%M"), 
+                 ', '.join( ["'%s'" % u.nickname() for u in feature.going] )   
+               )
+
+
+
+
 

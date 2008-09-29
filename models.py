@@ -78,6 +78,10 @@ class Feature(db.Model):
             return len(self.going) 
         else: 
             return None
+
+    @property 
+    def json(self): 
+        pass
  
     @property
     def get_url(self):

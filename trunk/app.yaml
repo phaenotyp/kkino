@@ -11,6 +11,10 @@ handlers:
   script: admin.py 
   # login: admin
 
+- url: /api/.*
+  script: api.py 
+
+
 - url: /.*
   script: kkino.py
 

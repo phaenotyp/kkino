@@ -5,7 +5,16 @@
 
 var kinoMaps = {
 	
+			loadMaps: function () {
+			
+  		google.load("maps", "2", {"callback" : kinoMaps.initialize});
+		
+	},
+	
 	initialize: function(){
+		
+		
+		
 		
 		if (GBrowserIsCompatible()) {
 			
@@ -51,4 +60,4 @@ var kinoMaps = {
 		  
 		  
 		  
-google.setOnLoadCallback(kinoMaps.initialize);		  
+google.setOnLoadCallback(kinoMaps.loadMaps);		  

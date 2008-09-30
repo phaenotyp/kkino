@@ -7,6 +7,11 @@ from util import tmpl, add_user_to_context
 from google.appengine.ext import db
 import cgi
 
+# Controllers for Pages dealing with Features. 
+# Features are a many-to-many relationship between movies and 
+# and cinemas (kinos). one feature represents one movie being i
+# shown at one cinema at a certain time.
+
 class FeatureList(webapp.RequestHandler):
     def get(self):
         feats = Feature.all().fetch(50)  

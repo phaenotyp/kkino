@@ -3,7 +3,6 @@ from google.appengine.api import users
 from util import sluggify
 from settings import *
 
-
 # MODEL.get_or_insert 
 # MODEL.by_key_name 
 
@@ -14,6 +13,7 @@ class Kino(db.Model):
     name = db.StringProperty(required=True)
     adress = db.PostalAddressProperty()
     geo = db.GeoPtProperty() 
+    # slug should be a url save and unique version of the name    
     slug = db.StringProperty()
 
     @property 
@@ -41,6 +41,7 @@ class Kino(db.Model):
 
     def put(self):  
         """Overide put so that slug gets updated by name""" 
+        # TODO: validate that slug is url-safe and unique
         self.slug = sluggify(self.name) 
         super(Kino, self).put()  
 
@@ -67,22 +68,31 @@ class Movie(db.Model):
         return '/movies/%s/' % self.slug 
 
 class Feature(db.Model):
+    """A Feature represents a Movie being played at a cinema (kino) at a 
+       certain time. 
+       Features are Many-to-many relationships between movies and kinos. 
+    """
     movie = db.ReferenceProperty(reference_class=Movie, collection_name="features")
     kino = db.ReferenceProperty(reference_class=Kino, collection_name="features")
-    datetime = db.DateTimeProperty() 
+
+    # the date and time the movie is being played. should possibly renamed to
+    # 'showtime' or something to avoid collision with the python package
+    #  and datatype called datetime.
+    datetime = db.DateTimeProperty()  
+
+    # a list of users plaining to attend this feature.
+    # should possibly be changed to contain keys of user entities.
     going = db.ListProperty(users.User) 
    
     @property 
     def num_going(self): 
+        """Returns the length of the going property. The number of users
+           attending this feature."""
         if len(self.going)>0: 
             return len(self.going) 
         else: 
             return None
 
-    @property 
-    def json(self): 
-        pass
- 
     @property
     def get_url(self):
         return '/features/%s/' % self.key().id()
@@ -90,7 +100,6 @@ class Feature(db.Model):
     def put(self):  
         """The first showing of a movie gets denormalized into the movie model.
            Check if this feature is the earliest of its movie and update the movie-instance accordingliy""" 
-                                                        
         num_earlier_feats = Feature.gql(
            "WHERE first_feat < :1", self.datetime
            ).count(2)

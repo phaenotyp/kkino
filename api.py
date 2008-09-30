@@ -11,7 +11,6 @@ from controllers import api
 
 # ULR-Config for the JSON-API 
 # Mostly supposed to be used in Ajax-calls. 
-
 application = webapp.WSGIApplication(
    [
     ('/api/kinos/', api.KinoList),

@@ -7,7 +7,12 @@ from util import tmpl, add_user_to_context
 from google.appengine.ext import db
 import cgi
 
+
+# Controllers for the JSON-API.
+# The normal response is a json-object.  
+
 class KinoList(webapp.RequestHandler):
+    """A JSON representation of all the cinemas in the database.""" 
     def get(self):
         cinemas = db.GqlQuery("SELECT * FROM Kino ORDER BY name ASC").fetch(20) 
         self.response.out.write(
@@ -15,6 +20,8 @@ class KinoList(webapp.RequestHandler):
         ) 
 
 class KinoDetail(webapp.RequestHandler):
+    """JSON for one Cinema, get /api/kinos/[slug]/features/ for
+       the Movies being played."""
     def get(self, slug):
         k = Kino.all().filter('slug =', slug ).get() 
         self.response.out.write(
